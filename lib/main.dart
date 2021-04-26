@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                   Wrap(
                     children: [
                       Container(
-                        width: 190,
+                        width: 166,
                         child:
                         TextField(
                           enabled: false,
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Container(
-                        width: 190,
+                        width: 166,
                         child:
                         TextField(
                           enabled: false,
@@ -128,18 +128,18 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Container(
                     width: 400,
-                    height: 500,
+                    height: 472,
                     child:
                     Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
+                      spacing: 13,
+                      runSpacing: 13,
                       children: [
                         TextButton(
                             child: Text('1'),
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -203,7 +203,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -267,7 +267,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -284,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -301,7 +301,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -318,7 +318,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -331,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -348,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -366,7 +366,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -382,7 +382,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -395,7 +395,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(305,100)
+                                minimumSize: Size(266,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -433,7 +433,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(100,100)
+                                minimumSize: Size(80,80)
                             ),
                             onPressed: () {
                               setState(() {
