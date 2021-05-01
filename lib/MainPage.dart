@@ -17,6 +17,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:very_simple_calc/KmToMilesConverter.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        '/converter': (context) => KmToMilesConverter(),
+      },
       theme: ThemeData.dark(),
       home: HomePage(title: 'Simple Calculator'),
     );
@@ -395,7 +399,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(266,80)
+                                minimumSize: Size(173,80)
                             ),
                             onPressed: () {
                               setState(() {
@@ -426,6 +430,17 @@ class _HomePageState extends State<HomePage> {
                                   result = divisionResult.toString();
                                 }
                               });
+                            }
+                        ),
+                        TextButton(
+                            child: Text('Km/Mi'),
+                            style: TextButton.styleFrom(
+                                backgroundColor: Colors.orangeAccent,
+                                primary: Colors.white,
+                                minimumSize: Size(80,80)
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('/converter');
                             }
                         ),
                         TextButton(
