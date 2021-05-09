@@ -11,13 +11,21 @@
 *       second number - program gives error.
 *
 *     Although, calculator's functionality works in case of correct usage.
+*
+*     Database or its entries has to be deleted manually from device/emulator storage.
 */
 
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:very_simple_calc/Calculation.dart';
 import 'package:very_simple_calc/KmToMilesConverter.dart';
+
+import 'package:intl/intl.dart';
+
+import 'HistoryPage.dart';
+import 'database_helper.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,9 +33,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        '/converter': (context) => KmToMilesConverter(),
-      },
       theme: ThemeData.dark(),
       home: HomePage(title: 'Simple Calculator'),
     );
@@ -50,6 +55,9 @@ class _HomePageState extends State<HomePage> {
   String secondNumber = '';
   String resultPlaceholder = 'Result:  ';
   String result = '';
+  bool log = false;
+  List<Calculation> listOfCalculations = List<Calculation>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -110,25 +118,43 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Container(
-                  height: 20, // used as a padding
+                  height: 15, // used as a padding
                 ),
-                Container(
-                  width: 400,
-                  child:
-                  TextField(
-                    enabled: false,
-                    decoration: InputDecoration(
-                      hintText: resultPlaceholder + result,
-                      hintStyle: TextStyle(color: Colors.white),
-                      disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.all(Radius.circular(10))
+                Row(
+                  children: [
+                    Container(
+                      width: 266,
+                      child:
+                      TextField(
+                        enabled: false,
+                        decoration: InputDecoration(
+                          hintText: resultPlaceholder + result,
+                          hintStyle: TextStyle(color: Colors.white),
+                          disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.all(Radius.circular(10))
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    Container(
+                      width: 13,
+                    ),
+                    TextButton(
+                        child: Text('Logs'),
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.orangeAccent,
+                            primary: Colors.white,
+                            minimumSize: Size(80,59)
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => HistoryPage(listOfCalculations : listOfCalculations)));
+                        }
+                    ),
+                  ],
                 ),
                 Container(
-                  height: 20, // used as a padding
+                  height: 13, // used as a padding
                 ),
                 Container(
                     width: 400,
@@ -401,7 +427,7 @@ class _HomePageState extends State<HomePage> {
                                 primary: Colors.white,
                                 minimumSize: Size(173,80)
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               setState(() {
                                 if(currentOperation == '^') {
                                   double base = double.parse(firstNumber);
@@ -429,7 +455,50 @@ class _HomePageState extends State<HomePage> {
                                   double divisionResult = firstNumberParsed / secondNumberParsed;
                                   result = divisionResult.toString();
                                 }
+
+                                if (currentOperation == '' || firstNumber == '' || secondNumber == '') {
+                                  log = false;
+                                } else {
+                                  log = true;
+                                }
                               });
+
+                              String equation = firstNumber + currentOperation + secondNumber + '=' + result;
+                              DateTime now = new DateTime.now();
+                              String formatDate(DateTime date) => new DateFormat("MMMM d, hh:mm").format(date);
+                              String formattedTimeNow = formatDate(now);
+                              String nowString = formattedTimeNow.toString();
+
+                              if(log == true) {
+
+                                listOfCalculations.clear();
+
+                                print(' ');
+
+                                await DatabaseHelper.instance.insert({
+                                  DatabaseHelper.columnEquation: equation,
+                                  DatabaseHelper.columnTimestamp: nowString
+                                });
+
+                                List<Map<String,
+                                    dynamic>> queryRows = await DatabaseHelper
+                                    .instance.queryAll();
+                                queryRows.forEach((row) => (print(row)));
+
+                                print(' ');
+
+                                queryRows.forEach((element) {
+                                  Calculation calculation = Calculation.fromMap(element);
+                                  listOfCalculations.add(calculation);
+                                });
+
+                                List<Calculation> listOfCalculationsReversed = listOfCalculations.reversed.toList();
+                                listOfCalculations = listOfCalculationsReversed;
+                                print(listOfCalculations.length);
+
+                              } else {
+                                print('Error. Result not added to database.');
+                              }
                             }
                         ),
                         TextButton(
@@ -440,7 +509,7 @@ class _HomePageState extends State<HomePage> {
                                 minimumSize: Size(80,80)
                             ),
                             onPressed: () {
-                              Navigator.of(context).pushNamed('/converter');
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => KmToMilesConverter()));
                             }
                         ),
                         TextButton(
