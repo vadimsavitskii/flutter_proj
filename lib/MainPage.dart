@@ -13,6 +13,7 @@
 *     Although, calculator's functionality works in case of correct usage.
 *
 *     Database or its entries has to be deleted manually from device/emulator storage.
+*     Find: data/data very_simple_calc
 */
 
 import 'dart:math';
