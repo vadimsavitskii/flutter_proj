@@ -18,15 +18,18 @@
 
 import 'dart:math';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:very_simple_calc/Calculation.dart';
 import 'package:very_simple_calc/KmToMilesConverter.dart';
 
 import 'package:intl/intl.dart';
+import 'package:very_simple_calc/TypesOfHistoryChoicePage.dart';
 
 import 'HistoryPage.dart';
 import 'database_helper.dart';
+import 'firestore_api.dart';
 
 void main() => runApp(MyApp());
 
@@ -62,478 +65,490 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text(widget.title)),
-      ),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Column(
-              children: [
-                Container(
-                  child:
-                  Wrap(
-                    children: [
-                      Container(
-                        width: 166,
-                        child:
-                        TextField(
-                          enabled: false,
-                          decoration: InputDecoration(
-                            hintText: firstNumber,
-                            hintStyle: TextStyle(color: Colors.white),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                                borderRadius: BorderRadius.all(Radius.circular(10))
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 25,
-                        height: 50,
-                        child: Align(
-                            alignment: Alignment.center,
-                            child:
-                            Text(currentOperation)
-                        ),
-                      ),
-                      Container(
-                        width: 166,
-                        child:
-                        TextField(
-                          enabled: false,
-                          decoration: InputDecoration(
-                            hintText: secondNumber,
-                            hintStyle: TextStyle(color: Colors.white),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                                borderRadius: BorderRadius.all(Radius.circular(10))
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 15, // used as a padding
-                ),
-                Row(
+    return FutureBuilder<FirebaseApp>(
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+
+        // if(snapshot.connectionState == ConnectionState.waiting) {
+        //   return Center(child: CircularProgressIndicator());
+        // }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Center(child: Text(widget.title)),
+          ),
+          body: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: Column(
                   children: [
                     Container(
-                      width: 266,
                       child:
-                      TextField(
-                        enabled: false,
-                        decoration: InputDecoration(
-                          hintText: resultPlaceholder + result,
-                          hintStyle: TextStyle(color: Colors.white),
-                          disabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                              borderRadius: BorderRadius.all(Radius.circular(10))
+                      Wrap(
+                        children: [
+                          Container(
+                            width: 166,
+                            child:
+                            TextField(
+                              enabled: false,
+                              decoration: InputDecoration(
+                                hintText: firstNumber,
+                                hintStyle: TextStyle(color: Colors.white),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                    borderRadius: BorderRadius.all(Radius.circular(10))
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                          Container(
+                            width: 25,
+                            height: 50,
+                            child: Align(
+                                alignment: Alignment.center,
+                                child:
+                                Text(currentOperation)
+                            ),
+                          ),
+                          Container(
+                            width: 166,
+                            child:
+                            TextField(
+                              enabled: false,
+                              decoration: InputDecoration(
+                                hintText: secondNumber,
+                                hintStyle: TextStyle(color: Colors.white),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                    borderRadius: BorderRadius.all(Radius.circular(10))
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     Container(
-                      width: 13,
+                      height: 15, // used as a padding
                     ),
-                    TextButton(
-                        child: Text('Logs'),
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.orangeAccent,
-                            primary: Colors.white,
-                            minimumSize: Size(80,59)
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => HistoryPage(listOfCalculations : listOfCalculations)));
-                        }
-                    ),
-                  ],
-                ),
-                Container(
-                  height: 13, // used as a padding
-                ),
-                Container(
-                    width: 400,
-                    height: 472,
-                    child:
-                    Wrap(
-                      spacing: 13,
-                      runSpacing: 13,
+                    Row(
                       children: [
-                        TextButton(
-                            child: Text('1'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
+                        Container(
+                          width: 266,
+                          child:
+                          TextField(
+                            enabled: false,
+                            decoration: InputDecoration(
+                              hintText: resultPlaceholder + result,
+                              hintStyle: TextStyle(color: Colors.white),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                  borderRadius: BorderRadius.all(Radius.circular(10))
+                              ),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                if(currentOperation == '') {
-                                  firstNumber = firstNumber + '1';
-                                } else {
-                                  secondNumber = secondNumber + '1';
-                                }
-                              });
-                            }
+                          ),
+                        ),
+                        Container(
+                          width: 13,
                         ),
                         TextButton(
-                            child: Text('2'),
+                            child: Text('Logs'),
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.orangeAccent,
                                 primary: Colors.white,
-                                minimumSize: Size(80,80)
+                                minimumSize: Size(80,59)
                             ),
                             onPressed: () {
-                              setState(() {
-                                if(currentOperation == '') {
-                                  firstNumber = firstNumber + '2';
-                                } else {
-                                  secondNumber = secondNumber + '2';
-                                }
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('3'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if(currentOperation == '') {
-                                  firstNumber = firstNumber + '3';
-                                } else {
-                                  secondNumber = secondNumber + '3';
-                                }
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('+'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                currentOperation = '+';
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('4'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if(currentOperation == '') {
-                                  firstNumber = firstNumber + '4';
-                                } else {
-                                  secondNumber = secondNumber + '4';
-                                }
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('5'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if(currentOperation == '') {
-                                  firstNumber = firstNumber + '5';
-                                } else {
-                                  secondNumber = secondNumber + '5';
-                                }
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('6'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if(currentOperation == '') {
-                                  firstNumber = firstNumber + '6';
-                                } else {
-                                  secondNumber = secondNumber + '6';
-                                }
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('-'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                currentOperation = '-';
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('7'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if(currentOperation == '') {
-                                  firstNumber = firstNumber + '7';
-                                } else {
-                                  secondNumber = secondNumber + '7';
-                                }
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('8'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if(currentOperation == '') {
-                                  firstNumber = firstNumber + '8';
-                                } else {
-                                  secondNumber = secondNumber + '8';
-                                }
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('9'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if(currentOperation == '') {
-                                  firstNumber = firstNumber + '9';
-                                } else {
-                                  secondNumber = secondNumber + '9';
-                                }
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('*'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                currentOperation = '*';
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('0'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if(currentOperation == '') {
-                                  firstNumber = firstNumber + '0';
-                                } else {
-                                  secondNumber = secondNumber + '0';
-                                }
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('.'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if(currentOperation == '' && !firstNumber.contains('.') && firstNumber[0] != '.') {
-                                  firstNumber = firstNumber + '.';
-                                }
-                                if(currentOperation != '' && !secondNumber.contains('.') && secondNumber[0] != '.') {
-                                  secondNumber = secondNumber + '.';
-                                }
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('C'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                currentOperation = '';
-                                firstNumber = '';
-                                secondNumber = '';
-                                result = '';
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('/'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                currentOperation = '/';
-                              });
-                            }
-                        ),
-                        TextButton(
-                            child: Text('Calculate'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(173,80)
-                            ),
-                            onPressed: () async {
-                              setState(() {
-                                if(currentOperation == '^') {
-                                  double base = double.parse(firstNumber);
-                                  double exponent = double.parse(secondNumber);
-                                  double powerResult = pow(base, exponent);
-                                  result = powerResult.toString();
-                                } else if (currentOperation == '+') {
-                                  double firstNumberParsed = double.parse(firstNumber);
-                                  double secondNumberParsed = double.parse(secondNumber);
-                                  double additionResult = firstNumberParsed + secondNumberParsed;
-                                  result = additionResult.toString();
-                                } else if (currentOperation == '-') {
-                                  double firstNumberParsed = double.parse(firstNumber);
-                                  double secondNumberParsed = double.parse(secondNumber);
-                                  double subtractionResult = firstNumberParsed - secondNumberParsed;
-                                  result = subtractionResult.toString();
-                                } else if (currentOperation == '*') {
-                                  double firstNumberParsed = double.parse(firstNumber);
-                                  double secondNumberParsed = double.parse(secondNumber);
-                                  double multiplicationResult = firstNumberParsed * secondNumberParsed;
-                                  result = multiplicationResult.toString();
-                                } else if (currentOperation == '/') {
-                                  double firstNumberParsed = double.parse(firstNumber);
-                                  double secondNumberParsed = double.parse(secondNumber);
-                                  double divisionResult = firstNumberParsed / secondNumberParsed;
-                                  result = divisionResult.toString();
-                                }
-
-                                if (currentOperation == '' || firstNumber == '' || secondNumber == '') {
-                                  log = false;
-                                } else {
-                                  log = true;
-                                }
-                              });
-
-                              String equation = firstNumber + currentOperation + secondNumber + '=' + result;
-                              DateTime now = new DateTime.now();
-                              String formatDate(DateTime date) => new DateFormat("MMMM d, hh:mm").format(date);
-                              String formattedTimeNow = formatDate(now);
-                              String nowString = formattedTimeNow.toString();
-
-                              if(log == true) {
-
-                                listOfCalculations.clear();
-
-                                print(' ');
-
-                                await DatabaseHelper.instance.insert({
-                                  DatabaseHelper.columnEquation: equation,
-                                  DatabaseHelper.columnTimestamp: nowString
-                                });
-
-                                List<Map<String,
-                                    dynamic>> queryRows = await DatabaseHelper
-                                    .instance.queryAll();
-                                queryRows.forEach((row) => (print(row)));
-
-                                print(' ');
-
-                                queryRows.forEach((element) {
-                                  Calculation calculation = Calculation.fromMap(element);
-                                  listOfCalculations.add(calculation);
-                                });
-
-                                List<Calculation> listOfCalculationsReversed = listOfCalculations.reversed.toList();
-                                listOfCalculations = listOfCalculationsReversed;
-                                print(listOfCalculations.length);
-
-                              } else {
-                                print('Error. Result not added to database.');
-                              }
-                            }
-                        ),
-                        TextButton(
-                            child: Text('Km/Mi'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => KmToMilesConverter()));
-                            }
-                        ),
-                        TextButton(
-                            child: Text('^'),
-                            style: TextButton.styleFrom(
-                                backgroundColor: Colors.orangeAccent,
-                                primary: Colors.white,
-                                minimumSize: Size(80,80)
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                currentOperation = '^';
-                              });
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => TypesOfHistoryChoicePage(listOfCalculations : listOfCalculations)));
                             }
                         ),
                       ],
+                    ),
+                    Container(
+                      height: 13, // used as a padding
+                    ),
+                    Container(
+                        width: 400,
+                        height: 472,
+                        child:
+                        Wrap(
+                          spacing: 13,
+                          runSpacing: 13,
+                          children: [
+                            TextButton(
+                                child: Text('1'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '') {
+                                      firstNumber = firstNumber + '1';
+                                    } else {
+                                      secondNumber = secondNumber + '1';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('2'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '') {
+                                      firstNumber = firstNumber + '2';
+                                    } else {
+                                      secondNumber = secondNumber + '2';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('3'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '') {
+                                      firstNumber = firstNumber + '3';
+                                    } else {
+                                      secondNumber = secondNumber + '3';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('+'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    currentOperation = '+';
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('4'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '') {
+                                      firstNumber = firstNumber + '4';
+                                    } else {
+                                      secondNumber = secondNumber + '4';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('5'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '') {
+                                      firstNumber = firstNumber + '5';
+                                    } else {
+                                      secondNumber = secondNumber + '5';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('6'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '') {
+                                      firstNumber = firstNumber + '6';
+                                    } else {
+                                      secondNumber = secondNumber + '6';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('-'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    currentOperation = '-';
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('7'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '') {
+                                      firstNumber = firstNumber + '7';
+                                    } else {
+                                      secondNumber = secondNumber + '7';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('8'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '') {
+                                      firstNumber = firstNumber + '8';
+                                    } else {
+                                      secondNumber = secondNumber + '8';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('9'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '') {
+                                      firstNumber = firstNumber + '9';
+                                    } else {
+                                      secondNumber = secondNumber + '9';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('*'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    currentOperation = '*';
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('0'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '') {
+                                      firstNumber = firstNumber + '0';
+                                    } else {
+                                      secondNumber = secondNumber + '0';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('.'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if(currentOperation == '' && !firstNumber.contains('.') && firstNumber[0] != '.') {
+                                      firstNumber = firstNumber + '.';
+                                    }
+                                    if(currentOperation != '' && !secondNumber.contains('.') && secondNumber[0] != '.') {
+                                      secondNumber = secondNumber + '.';
+                                    }
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('C'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    currentOperation = '';
+                                    firstNumber = '';
+                                    secondNumber = '';
+                                    result = '';
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('/'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    currentOperation = '/';
+                                  });
+                                }
+                            ),
+                            TextButton(
+                                child: Text('Calculate'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(173,80)
+                                ),
+                                onPressed: () async {
+                                  setState(() {
+                                    if(currentOperation == '^') {
+                                      double base = double.parse(firstNumber);
+                                      double exponent = double.parse(secondNumber);
+                                      double powerResult = pow(base, exponent);
+                                      result = powerResult.toString();
+                                    } else if (currentOperation == '+') {
+                                      double firstNumberParsed = double.parse(firstNumber);
+                                      double secondNumberParsed = double.parse(secondNumber);
+                                      double additionResult = firstNumberParsed + secondNumberParsed;
+                                      result = additionResult.toString();
+                                    } else if (currentOperation == '-') {
+                                      double firstNumberParsed = double.parse(firstNumber);
+                                      double secondNumberParsed = double.parse(secondNumber);
+                                      double subtractionResult = firstNumberParsed - secondNumberParsed;
+                                      result = subtractionResult.toString();
+                                    } else if (currentOperation == '*') {
+                                      double firstNumberParsed = double.parse(firstNumber);
+                                      double secondNumberParsed = double.parse(secondNumber);
+                                      double multiplicationResult = firstNumberParsed * secondNumberParsed;
+                                      result = multiplicationResult.toString();
+                                    } else if (currentOperation == '/') {
+                                      double firstNumberParsed = double.parse(firstNumber);
+                                      double secondNumberParsed = double.parse(secondNumber);
+                                      double divisionResult = firstNumberParsed / secondNumberParsed;
+                                      result = divisionResult.toString();
+                                    }
+
+                                    if (currentOperation == '' || firstNumber == '' || secondNumber == '') {
+                                      log = false;
+                                    } else {
+                                      log = true;
+                                    }
+                                  });
+
+                                  String equation = firstNumber + currentOperation + secondNumber + '=' + result;
+                                  DateTime now = new DateTime.now();
+                                  String formatDate(DateTime date) => new DateFormat("MMMM d, hh:mm").format(date);
+                                  String formattedTimeNow = formatDate(now);
+                                  String nowString = formattedTimeNow.toString();
+
+                                  if(log == true) {
+
+                                    listOfCalculations.clear();
+
+                                    print(' ');
+
+                                    await DatabaseHelper.instance.insert({
+                                      DatabaseHelper.columnEquation: equation,
+                                      DatabaseHelper.columnTimestamp: nowString
+                                    });
+
+                                    List<Map<String,
+                                        dynamic>> queryRows = await DatabaseHelper
+                                        .instance.queryAll();
+                                    queryRows.forEach((row) => (print(row)));
+
+                                    print(' ');
+
+                                    queryRows.forEach((element) {
+                                      Calculation calculation = Calculation.fromMap(element);
+                                      listOfCalculations.add(calculation);
+                                    });
+
+                                    FirestoreApi().addData(listOfCalculations[listOfCalculations.length-1].toJson());
+
+                                    List<Calculation> listOfCalculationsReversed = listOfCalculations.reversed.toList();
+                                    listOfCalculations = listOfCalculationsReversed;
+                                    print(listOfCalculations.length);
+
+                                  } else {
+                                    print('Error. Result not added to database.');
+                                  }
+                                }
+                            ),
+                            TextButton(
+                                child: Text('Km/Mi'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => KmToMilesConverter()));
+                                }
+                            ),
+                            TextButton(
+                                child: Text('^'),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    primary: Colors.white,
+                                    minimumSize: Size(80,80)
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    currentOperation = '^';
+                                  });
+                                }
+                            ),
+                          ],
+                        )
                     )
-                )
-              ],
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      }
     );
   }
 }

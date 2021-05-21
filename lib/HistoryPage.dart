@@ -22,7 +22,7 @@ class _HistoryPage extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Previous calculations")),
+        title: Center(child: Text("SQL records")),
       ),
       body: ListView.builder(
           itemCount: listOfCalculations.length,
